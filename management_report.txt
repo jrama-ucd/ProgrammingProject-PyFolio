@@ -1,0 +1,26 @@
+GLACIAL PACE CAPITAL
+TRADING AGENT – MANAGEMENT SUMMARY
+====================================
+Prepared for: Noa
+Market dataset: NOVA
+Current market day: 750 of 750
+
+1. OVERALL RESULT
+The account finished above its starting value, making a gain of 5,642.08 USD.
+The portfolio increased by 70.29% over the period.
+Starting portfolio value: 8,026.60 USD
+Current portfolio value:  13,668.68 USD
+
+2. WHAT THE AGENT DID
+The trading agent completed its run using the both information setting.
+Completed BUY and SELL orders recorded in this simulation: 246.
+
+3. RISK AND DECLINES
+At its worst point, the portfolio was 6.66% below a previous high. This is the largest recorded fall, not necessarily the final result.
+
+4. MANAGEMENT INTERPRETATION
+A positive result in this historical simulation does not guarantee future performance. The strategy should be tested on other datasets and market conditions before being treated as reliable.
+The agent uses the information supplied in the selected run mode. In particular, the project's current strategy uses news-word sentiment when headlines are available; this is a simple dictionary-based method and can misunderstand context.
+
+5. IMPORTANT LIMITATION
+This is a simulated historical result, not evidence of real-world investment performance. Trades are subject to the simulator's execution rules and fees.
