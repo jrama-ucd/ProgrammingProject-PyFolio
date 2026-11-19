@@ -3,33 +3,31 @@
 #
 # WHAT THIS FILE IS
 # -----------------
-# Saving and loading, in PLAIN TEXT, so results survive a restart (the same discipline as
+# basically saving and loading, in PLAIN TEXT, so results survive a restart (the same discipline as
 # the cafe's revenue file from the lectures). Three files:
 #
 #   session.txt      the whole desk state, so you can quit and carry on later
 #   results.txt      one line per saved run:   name,final_equity,trades,return,max_dd,sharpe
 #   leaderboard.txt  rank,name,final_equity   one line per saved run, BEST FIRST
 #
-# WHY THIS CLASS AND NOT THE MENU CODE?
 # The Storage class is the only code that knows how a line in those files looks. The menu
 # just says "save this" / "load that". If the format ever changes, one file changes and the
-# menu is untouched (single responsibility). That is the answer to the interview question
-# "which class knows the file's line format, and why there?".
+# menu is untouched (single responsibility).
 #
-# Libraries: none. Plain open()/read/write, as taught in week 2.
+# This file uses open()/read/write, as taught in week 2.
 
 
 class StorageError(Exception):
-    """Raised when a file cannot be read or written; the message is written for the user."""
+    """Raised when a file cannot be read or written."""
 
 
 def clean_name(name):
-    """A run's name goes into a comma-separated line, so commas and line breaks must go."""
+    # A run's name goes into a comma-separated line, so commas and line breaks must go.
     return name.replace(",", " ").replace("\n", " ").replace("\r", " ").strip()
 
 
 class Storage:
-    """Reads and writes the three text files. File names are arguments with defaults."""
+    # Reads and writes the three text files. File names are arguments with defaults.
 
     def __init__(self, session_file="session.txt", results_file="results.txt",
                  leaderboard_file="leaderboard.txt"):
@@ -37,7 +35,7 @@ class Storage:
         self.results_file = results_file
         self.leaderboard_file = leaderboard_file
 
-    # ------------------------------------------------------------------ the session
+    # the session
 
     def save_session(self, simulator):
         """Write the state of a Simulator as 'key=value' lines.
