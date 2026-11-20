@@ -3,13 +3,11 @@
 #
 # The purpose of this file is about READING the market files , and nothing else does
 #
-# The rules from the dataset guide that this file follows:
-#   * The files are read exactly as distributed, at run time, every time. We never
-#     convert, clean, edit or re-save them, and we never need a file somebody prepared
-#     earlier. So the held-back market (same schema) loads with no change.
-#   * <TICKER>.csv       header day,open,high,low,close,volume , one row per day
-#   * <TICKER>_news.txt  header day,headline , zero, one or many headlines per day
-#   * A missing news file, or a day with no headline, must NOT crash the program.
+# Key rules to remember:
+#   * Read files as-is at runtime (no pre-cleaning/caching) so unseen test sets work directly.
+#   * <TICKER>.csv      -> day,open,high,low,close,volume (1 row per day)
+#   * <TICKER>_news.txt -> day,headline (0, 1, or multiple headlines per day)
+#   * Missing news file or empty news day should NOT crash the app
 #
 # Libraries: pandas reads the CSV (taught: read_csv), numpy checks the numbers
 # (taught: arrays). The news file is plain text, so it uses plain file reading
@@ -17,8 +15,7 @@
 import numpy as np
 import pandas as pd
 
-# Folders we look in, in this order, when the user does not name one.
-# selfcheck.py uses the same two places, so everything lines up.
+# Default folders to search if user doesn't specify one (matches selfcheck.py)
 DATA_FOLDERS = ("data/training/", "../data/training/")
 
 # The columns the price file must have (the dataset guide's schema).
@@ -26,15 +23,15 @@ PRICE_COLUMNS = ("open", "high", "low", "close", "volume")
 
 
 class DataError(Exception):
-    """Raised for any data problem. The message is written for the user to read."""
+    """base error for bad/missing data; message is shown directly to the user."""
 
 
 class DataNotFound(DataError):
-    """The ticker's files are not in any folder we looked in (the desk can ask for a folder)."""
+    """Raised when the ticker CSV isn't found in any of the search folders.."""
 
 
 class Market:
-    """One loaded market: the daily price bars and the news, kept together.
+    """holds all loaded data for one ticker (prices + news).
 
     bars  : list of dicts, one per day, each {"open","high","low","close","volume"}.
             The list index IS the day number (0, 1, 2, ...).
@@ -64,7 +61,7 @@ def can_open(path):
 
 
 def find_folder(ticker, folder=None):
-    """Return the folder that holds <ticker>.csv, or "" if it is nowhere we look.
+    """find which folder has <ticker>.csv., Returns "" if not found.
 
     If the caller names a folder we look only there; otherwise we try DATA_FOLDERS.
     """
@@ -83,8 +80,8 @@ def find_folder(ticker, folder=None):
 def load_bars(path):
     """Read the price CSV into a list of bar dicts, checking it on the way.
 
-    Raises DataError with a plain message for every problem a user could cause
-    (wrong file, missing column, empty file, text in a number column, zero prices).
+    catches common file issues (empty file, missing columns, NaNs, strings in numeric
+    columns, <= 0 prices) and raises DataError with a clear message.
     """
     try:
         frame = pd.read_csv(path)                     # header row, comma separated
@@ -102,8 +99,7 @@ def load_bars(path):
     if len(frame) < 2:
         raise DataError("The price file " + path + " needs at least 2 days of data.")
 
-    # Turn each column into a numpy ARRAY first (the contract's "convert before you slice"
-    # warning): arrays work by position, a raw pandas Series works by label.
+    # Convert columns to numpy float arrays first so we index by position (not pandas labels)
     columns = {}
     for column in PRICE_COLUMNS:
         try:
