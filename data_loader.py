@@ -1,10 +1,7 @@
 # data_loader.py
-# Reference: <full name of the member who is the reference for the data piece>
+# Reference: Justin Ramaputra
 #
-# WHAT THIS FILE IS
-# -----------------
-# Everything about READING the market files lives here, and nothing else does
-# (rubric item 5: "loading code isolated from strategy code").
+# The purpose of this file is about READING the market files , and nothing else does
 #
 # The rules from the dataset guide that this file follows:
 #   * The files are read exactly as distributed, at run time, every time. We never
@@ -16,7 +13,6 @@
 #
 # Libraries: pandas reads the CSV (taught: read_csv), numpy checks the numbers
 # (taught: arrays). The news file is plain text, so it uses plain file reading
-# (week 2/3), as the dataset guide says.
 
 import numpy as np
 import pandas as pd
